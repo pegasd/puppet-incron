@@ -4,7 +4,7 @@
 class incron::service {
 
   if $::incron::service_manage {
-    service { 'incron':
+    service { 'incrond':
       ensure     => $::incron::service_ensure,
       enable     => $::incron::service_enable,
       hasrestart => true,
