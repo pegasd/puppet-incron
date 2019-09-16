@@ -1,4 +1,3 @@
-  
 # == Class: incron::params
 #
 # Defines defaults for the incron class. Params class should not be called
