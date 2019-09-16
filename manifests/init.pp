@@ -47,10 +47,11 @@ class incron (
   Boolean                $service_manage  = true,
   Enum[running, stopped] $service_ensure  = running,
   Boolean                $service_enable  = true,
+  String[1]              $service_name    = $::incron::params::service_name,
 
   # incron::purge
   Boolean                $purge_noop      = false,
-) {
+) inherits incron::params {
 
   if $ensure == present {
 
