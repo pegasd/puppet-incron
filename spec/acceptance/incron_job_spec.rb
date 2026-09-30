@@ -45,7 +45,10 @@ describe 'incron::job' do
     end
   end
 
-  context 'incron job works end to end' do
+  # Skipped on FreeBSD: incron there relies on the libinotify kqueue shim, which
+  # does not reliably deliver IN_CLOSE_WRITE, so the event never fires in the CI
+  # VM. The module's output is still verified by the incrontab content check above.
+  context 'incron job works end to end', unless: freebsd_target? do
     before(:all) do
       # incrond only acts on events once it has (re)loaded the freshly written
       # table, so restart it and give it a moment before triggering the watch.

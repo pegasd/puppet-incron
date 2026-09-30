@@ -64,13 +64,12 @@ Check out [REFERENCE](REFERENCE.md) for up-to-date details.
 
 - Supported and tested on:
     - Ubuntu 22.04, 24.04
-    - Debian 11, 12
-    - Rocky 9, AlmaLinux 9
-    - FreeBSD 13, 14, 15 (acceptance-tested on 14 and 15)
+    - Debian 12
+    - FreeBSD 14, 15
 - On FreeBSD, incron config lives under `/usr/local/etc` (`incron.conf`,
-  `incron.allow`, `incron.deny`, `incron.d`) and the service is `incrond`; the
-  per-user spool stays at `/var/spool/incron`. These are handled automatically
-  via the module's Hiera data.
+  `incron.allow`, `incron.deny`, `incron.d`) and the service is `incron` (the rc
+  script name; the daemon itself is `incrond`); the per-user spool stays at
+  `/var/spool/incron`. These are handled automatically via the module's Hiera data.
 
 ## Development
 
