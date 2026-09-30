@@ -65,7 +65,14 @@ Check out [REFERENCE](REFERENCE.md) for up-to-date details.
 - Supported and tested on:
     - Ubuntu 22.04, 24.04
     - Debian 12
+    - AlmaLinux 9, Rocky 9
     - FreeBSD 14, 15
+- On RHEL-family systems (e.g. AlmaLinux, Rocky), `incron` ships only in
+  [EPEL](https://docs.fedoraproject.org/en-US/epel/), not the base repositories.
+  This module does not manage repositories, so enable EPEL before including it,
+  e.g. `include epel` (from the `puppet/epel` module) or `dnf install
+  epel-release`. On RHEL-family the service is `incrond` (handled automatically
+  via the module's Hiera data).
 - On FreeBSD, incron config lives under `/usr/local/etc` (`incron.conf`,
   `incron.allow`, `incron.deny`, `incron.d`) and the service is `incron` (the rc
   script name; the daemon itself is `incrond`); the per-user spool stays at

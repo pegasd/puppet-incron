@@ -24,6 +24,14 @@ end
 RSpec.configure do |c|
   c.formatter = :documentation
   c.color     = true
+
+  # incron ships only in EPEL on RHEL-family; the module manages no repos, so
+  # enable EPEL here before any manifest runs. `before(:context)` (not
+  # `before(:suite)`) runs in example-group scope where litmus's `run_shell`
+  # exists; the guard no-ops on Debian/FreeBSD and stays idempotent via `rpm -q`.
+  c.before(:context) do
+    run_shell('if command -v dnf >/dev/null 2>&1 && ! rpm -q epel-release >/dev/null 2>&1; then dnf install -y epel-release; fi')
+  end
 end
 
 # Whether the machine under test is FreeBSD.
