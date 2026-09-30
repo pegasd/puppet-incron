@@ -2,7 +2,6 @@
 
 require 'spec_helper_acceptance'
 
-etc = freebsd_target? ? '/usr/local/etc' : '/etc'
 servicename = case os[:family]
               when 'redhat', 'fedora'
                 'incrond'
@@ -12,18 +11,18 @@ servicename = case os[:family]
 
 describe 'incron::job' do
   context 'creates incron::job' do
-    pp = <<~PUPPET
+    pp = <<~'PUPPET'
+      file { ['/watched_directory', '/incron_test']:
+        ensure => directory,
+        mode   => '0777',
+        owner  => 'root',
+      }
+
       file { '/usr/local/bin/test_notify':
         ensure  => file,
         mode    => '0775',
         owner   => 'root',
-        content => "#!/bin/sh\necho $1 >> /tmp/notify\n",
-      }
-
-      file { '/watched_directory':
-        ensure => directory,
-        mode   => '0777',
-        owner  => 'root',
+        content => "#!/bin/sh\necho \$1 >> /incron_test/notify\n",
       }
 
       include incron
@@ -38,20 +37,27 @@ describe 'incron::job' do
     it 'applies idempotently' do
       idempotent_apply(pp)
     end
+
+    # The module's own job is to render the incrontab entry correctly.
+    describe file('/var/spool/incron/root') do
+      it { is_expected.to be_file }
+      its(:content) { is_expected.to match(%r{^/watched_directory IN_CLOSE_WRITE /usr/local/bin/test_notify \$#$}) }
+    end
   end
 
-  context 'incron job works' do
+  context 'incron job works end to end' do
     before(:all) do
       # incrond only acts on events once it has (re)loaded the freshly written
-      # user table, so restart it and give it a moment before triggering the
-      # watched directory.
+      # table, so restart it and give it a moment before triggering the watch.
+      # Output goes to /incron_test rather than /tmp: incrond runs under systemd
+      # with PrivateTmp, so a /tmp (or /var/tmp) write would be invisible here.
       run_shell("service #{servicename} restart")
       sleep 3
       run_shell('echo hello > /watched_directory/notify_about_me_pretty_plz')
       sleep 5
     end
 
-    describe file('/tmp/notify') do
+    describe file('/incron_test/notify') do
       it { is_expected.to be_file }
       its(:content) { is_expected.to match(%r{^notify_about_me_pretty_plz$}) }
     end
@@ -61,9 +67,9 @@ describe 'incron::job' do
     pp = <<~PUPPET
       file {
         [
-          '/usr/local/bin/test_notify',
           '/watched_directory',
-          '/tmp/notify',
+          '/incron_test',
+          '/usr/local/bin/test_notify',
         ]:
           ensure  => absent,
           recurse => true,
@@ -78,10 +84,9 @@ describe 'incron::job' do
     end
 
     [
-      '/usr/local/bin/test_notify',
       '/watched_directory',
-      '/tmp/notify',
-      "#{etc}/incron.d/notify_me_please",
+      '/incron_test',
+      '/usr/local/bin/test_notify',
     ].each do |cleaned_up_file|
       describe file(cleaned_up_file) do
         it { is_expected.not_to exist }

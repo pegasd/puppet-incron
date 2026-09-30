@@ -200,7 +200,13 @@ describe 'incron' do
             it { is_expected.to contain_file(removed_file).only_with(ensure: :absent, force: true) }
           end
 
-          it { is_expected.to contain_service(service_name).with_ensure(:stopped) }
+          # remove.pp branches on service_provider (systemd -> service resource,
+          # freebsd -> idempotent exec), so key the expectation off the same fact.
+          if os_facts[:service_provider] == 'freebsd'
+            it { is_expected.to contain_exec('stop incrond') }
+          else
+            it { is_expected.to contain_service(service_name).with_ensure(:stopped) }
+          end
         end
       end
     end

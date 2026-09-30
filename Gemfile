@@ -33,7 +33,7 @@ group :development do
   gem "rubocop", '~> 1.50.0',                    require: false
   gem "rubocop-performance", '= 1.16.0',         require: false
   gem "rubocop-rspec", '= 2.19.0',               require: false
-  gem "rb-readline", '= 0.5.5',                  require: false, platforms: [:mswin, :mingw, :x64_mingw]
+  gem "rb-readline", '= 0.5.5',                  require: false, platforms: [:windows]
   gem "rexml", '>= 3.3.9',                       require: false
 end
 group :development, :release_prep do
@@ -41,8 +41,8 @@ group :development, :release_prep do
   gem "puppetlabs_spec_helper", '~> 7.0', require: false
 end
 group :system_tests do
-  gem "puppet_litmus", '~> 1.0',   require: false, platforms: [:ruby, :x64_mingw]
-  gem "CFPropertyList", '< 3.0.7', require: false, platforms: [:mswin, :mingw, :x64_mingw]
+  gem "puppet_litmus", '~> 1.0',   require: false, platforms: [:ruby, :windows]
+  gem "CFPropertyList", '< 3.0.7', require: false, platforms: [:windows]
   gem "serverspec", '~> 2.41',     require: false
 end
 
@@ -58,6 +58,7 @@ if RUBY_VERSION >= '3.4'
   gem "csv",        require: false
   gem "getoptlong", require: false
   gem "mutex_m",    require: false
+  gem "ostruct",    require: false
   gem "syslog",     require: false
 end
 
