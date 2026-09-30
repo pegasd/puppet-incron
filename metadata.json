@@ -28,20 +28,7 @@
     {
       "operatingsystem": "Debian",
       "operatingsystemrelease": [
-        "11",
         "12"
-      ]
-    },
-    {
-      "operatingsystem": "Rocky",
-      "operatingsystemrelease": [
-        "9"
-      ]
-    },
-    {
-      "operatingsystem": "AlmaLinux",
-      "operatingsystemrelease": [
-        "9"
       ]
     },
     {

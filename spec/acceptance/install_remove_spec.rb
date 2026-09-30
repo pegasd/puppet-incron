@@ -4,9 +4,10 @@ require 'spec_helper_acceptance'
 
 etc = freebsd_target? ? '/usr/local/etc' : '/etc'
 servicename = case os[:family]
-              when 'redhat', 'fedora', 'freebsd'
+              when 'redhat', 'fedora'
                 'incrond'
               else
+                # Debian-family and FreeBSD both use the `incron` service name.
                 'incron'
               end
 

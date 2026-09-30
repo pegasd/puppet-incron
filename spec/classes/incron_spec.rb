@@ -18,7 +18,7 @@ describe 'incron' do
       incrond_dir  = "#{etc}/incron.d"
       spool_dir    = '/var/spool/incron'
       root_group   = freebsd ? 'wheel' : 'root'
-      service_name = (os_facts[:os]['family'] == 'Debian') ? 'incron' : 'incrond'
+      service_name = (os_facts[:os]['family'] == 'RedHat') ? 'incrond' : 'incron'
 
       context 'with default parameters' do
         it { is_expected.to compile.with_all_deps }

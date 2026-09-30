@@ -3,6 +3,12 @@
 require 'spec_helper_acceptance'
 
 etc = freebsd_target? ? '/usr/local/etc' : '/etc'
+servicename = case os[:family]
+              when 'redhat', 'fedora'
+                'incrond'
+              else
+                'incron'
+              end
 
 describe 'incron::job' do
   context 'creates incron::job' do
@@ -35,12 +41,14 @@ describe 'incron::job' do
   end
 
   context 'incron job works' do
-    describe command('echo hello > /watched_directory/notify_about_me_pretty_plz') do
-      its(:exit_status) { is_expected.to eq 0 }
-    end
-
-    describe command('sleep 5') do
-      its(:exit_status) { is_expected.to eq 0 }
+    before(:all) do
+      # incrond only acts on events once it has (re)loaded the freshly written
+      # user table, so restart it and give it a moment before triggering the
+      # watched directory.
+      run_shell("service #{servicename} restart")
+      sleep 3
+      run_shell('echo hello > /watched_directory/notify_about_me_pretty_plz')
+      sleep 5
     end
 
     describe file('/tmp/notify') do
