@@ -1,0 +1,8 @@
+---
+incron::service_name: incrond
+incron::root_group: wheel
+incron::conf_file: /usr/local/etc/incron.conf
+incron::allow_file: /usr/local/etc/incron.allow
+incron::deny_file: /usr/local/etc/incron.deny
+incron::incrond_dir: /usr/local/etc/incron.d
+...

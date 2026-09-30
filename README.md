@@ -1,6 +1,6 @@
 # Configure and manage incron jobs with focus on tidiness
 
-[![Build Status](https://travis-ci.org/pegasd/puppet-incron.svg?branch=master)](https://travis-ci.org/pegasd/puppet-incron)
+[![ci](https://github.com/pegasd/puppet-incron/actions/workflows/ci.yml/badge.svg)](https://github.com/pegasd/puppet-incron/actions/workflows/ci.yml)
 [![Puppet Forge](https://img.shields.io/puppetforge/v/pegas/incron.svg)](https://forge.puppetlabs.com/pegas/incron)
 [![Puppet Forge - Downloads](https://img.shields.io/puppetforge/dt/pegas/incron.svg)](https://forge.puppetlabs.com/pegas/incron)
 [![Puppet Forge - Score](https://img.shields.io/puppetforge/f/pegas/incron.svg)](https://forge.puppetlabs.com/pegas/incron)
@@ -62,13 +62,15 @@ Check out [REFERENCE](REFERENCE.md) for up-to-date details.
 
 ## Limitations
 
-- Acceptance suite is run on the following GNU/Linux distributions:
-    - Ubuntu 14.04
-    - Ubuntu 16.04
-    - Ubuntu 18.04
-    - Debian 8
-    - CentOS 7
-    - Fedora 30
+- Supported and tested on:
+    - Ubuntu 22.04, 24.04
+    - Debian 11, 12
+    - Rocky 9, AlmaLinux 9
+    - FreeBSD 13, 14, 15 (acceptance-tested on 14 and 15)
+- On FreeBSD, incron config lives under `/usr/local/etc` (`incron.conf`,
+  `incron.allow`, `incron.deny`, `incron.d`) and the service is `incrond`; the
+  per-user spool stays at `/var/spool/incron`. These are handled automatically
+  via the module's Hiera data.
 
 ## Development
 

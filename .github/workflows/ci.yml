@@ -1,0 +1,137 @@
+---
+name: ci
+
+on: push
+
+jobs:
+  Spec:
+    uses: "puppetlabs/cat-github-actions/.github/workflows/module_ci.yml@main"
+    secrets: inherit
+
+  setup_matrix:
+    name: "Setup Test Matrix"
+    needs: "Spec"
+    runs-on: ubuntu-latest
+    outputs:
+      matrix: ${{ steps.get-matrix.outputs.matrix }}
+
+    steps:
+    - name: Checkout Source
+      uses: actions/checkout@v4
+
+    - name: Activate Ruby 3.2
+      uses: ruby/setup-ruby@v1
+      with:
+        ruby-version: "3.2"
+        bundler-cache: true
+
+    - name: Print bundle environment
+      run: |
+        echo ::group::bundler environment
+        bundle env
+        echo ::endgroup::
+
+    - name: Setup Acceptance Test Matrix
+      id: get-matrix
+      run: |
+        # FreeBSD has no Docker image / litmus provisioner; it is covered by the
+        # dedicated `FreeBSD` job (vmactions VM) instead, so exclude it here.
+        bundle exec matrix_from_metadata_v2 --exclude-platforms '["Ubuntu-22.04-arm", "Ubuntu-24.04-arm", "FreeBSD-13", "FreeBSD-14", "FreeBSD-15"]'
+
+  Acceptance:
+    name: "${{matrix.platforms.label}}, ${{matrix.collection}}"
+    needs:
+      - setup_matrix
+    if: ${{ needs.setup_matrix.outputs.matrix != '{}' }}
+
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix: ${{fromJson(needs.setup_matrix.outputs.matrix)}}
+
+    env:
+      PUPPET_GEM_VERSION: '~> 8.0'
+      FACTER_GEM_VERSION: 'https://github.com/puppetlabs/facter#main'
+
+    steps:
+    - name: Checkout Source
+      uses: actions/checkout@v4
+
+    - name: Activate Ruby 3.2
+      uses: ruby/setup-ruby@v1
+      with:
+        ruby-version: "3.2"
+        bundler-cache: true
+
+    - name: Print bundle environment
+      run: |
+        bundle env
+
+    - name: Disable apparmor
+      if: ${{matrix.platforms.provider == 'docker'}}
+      run: |
+        sudo systemctl disable apparmor
+        sudo systemctl stop apparmor
+
+    - name: Provision test environment
+      run: |
+        bundle exec rake 'litmus:provision[${{matrix.platforms.provider}},${{ matrix.platforms.image }}]'
+
+    - name: Install agent
+      run: |
+        # matrix_from_metadata_v2 only emits `-nightly` collections, but
+        # nightlies.puppet.com has been decommissioned; install from the
+        # release repo (apt.puppet.com) instead.
+        collection='${{ matrix.collection }}'
+        bundle exec rake "litmus:install_agent[${collection%-nightly}]"
+
+    - name: Install module
+      run: |
+        bundle exec rake 'litmus:install_module'
+
+    - name: Run acceptance tests
+      run: |
+        bundle exec rake 'litmus:acceptance:parallel'
+
+    - name: Remove test environment
+      if: ${{ always() }}
+      continue-on-error: true
+      run: |
+        bundle exec rake 'litmus:tear_down'
+
+  # FreeBSD cannot run in a Docker container, so the Litmus matrix above (which
+  # provisions Linux containers on the runner) can't cover it. Instead we boot a
+  # disposable FreeBSD guest with vmactions/freebsd-vm and run the acceptance
+  # suite against localhost *inside* that VM. The guest is thrown away with the
+  # job, which is important: the suite stops cron and purges unmanaged crontabs.
+  FreeBSD:
+    name: "FreeBSD ${{ matrix.release }}, localhost"
+    needs: Spec
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        release:
+          - "14.5"
+          - "15.1"
+
+    steps:
+    - name: Checkout Source
+      uses: actions/checkout@v4
+
+    - name: Run acceptance tests in a FreeBSD VM
+      uses: vmactions/freebsd-vm@v1
+      with:
+        release: "${{ matrix.release }}"
+        usesh: true
+        prepare: |
+          pkg install -y ruby devel/ruby-gems git rsync gmake
+          gem install bundler --no-document
+        run: |
+          export PUPPET_GEM_VERSION='~> 8.0'
+          export TARGET_HOST=localhost
+          bundle config set --local path vendor/bundle
+          bundle install --jobs 4 --retry 3
+          bundle exec rake spec_prep
+          bundle exec rake 'litmus:acceptance:localhost'
+...

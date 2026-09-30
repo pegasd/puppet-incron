@@ -2,8 +2,7 @@
 #
 # @api private
 class incron::config {
-
-  if !empty($::incron::allowed_users) and !empty($::incron::denied_users) {
+  if !empty($incron::allowed_users) and !empty($incron::denied_users) {
     fail('Either allowed or denied incron users must be specified, not both.')
   }
 
@@ -11,17 +10,16 @@ class incron::config {
     default:
       force => true,
       owner => 'root',
-      group => 'root',
+      group => $incron::root_group,
       mode  => '0644';
-    '/etc/incron.conf':
+    $incron::conf_file:
       ensure  => file,
       content => '';
-    '/etc/incron.allow':
-      ensure  => if empty($::incron::denied_users) { file } else { absent },
-      content => join(suffix([ 'root' ] + $::incron::allowed_users, "\n"));
-    '/etc/incron.deny':
-      ensure  => unless empty($::incron::denied_users) { file } else { absent },
-      content => join(suffix($::incron::denied_users, "\n"));
+    $incron::allow_file:
+      ensure  => if empty($incron::denied_users) { file } else { absent },
+      content => join(suffix(['root'] + $incron::allowed_users, "\n"));
+    $incron::deny_file:
+      ensure  => unless empty($incron::denied_users) { file } else { absent },
+      content => join(suffix($incron::denied_users, "\n"));
   }
-
 }

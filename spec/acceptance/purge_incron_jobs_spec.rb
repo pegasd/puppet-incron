@@ -5,7 +5,6 @@ require 'spec_helper_acceptance'
 describe 'incron::purge' do
   context 'manage two incron jobs' do
     pp = <<~PUPPET
-
       include incron
 
       incron::job { 'job_one':
@@ -19,10 +18,11 @@ describe 'incron::purge' do
         event   => 'IN_MOVED_TO',
         command => '/bin/echo two',
       }
-
     PUPPET
 
-    apply_and_test_idempotence pp
+    it 'applies idempotently' do
+      idempotent_apply(pp)
+    end
 
     describe file('/var/spool/incron/root') do
       it { is_expected.to exist }
@@ -33,7 +33,6 @@ describe 'incron::purge' do
 
   context 'manage only one incron job' do
     pp = <<~PUPPET
-
       include incron
 
       incron::job { 'job_one':
@@ -41,10 +40,11 @@ describe 'incron::purge' do
         event   => 'IN_MOVED_TO',
         command => '/bin/echo one',
       }
-
     PUPPET
 
-    apply_and_test_idempotence pp
+    it 'applies idempotently' do
+      idempotent_apply(pp)
+    end
 
     describe file('/var/spool/incron/root') do
       it { is_expected.to exist }

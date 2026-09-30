@@ -5,6 +5,23 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
+### Added
+- FreeBSD support (13, 14 and 15), including acceptance testing on 14 and 15.
+- New `root_group`, `conf_file`, `allow_file`, `deny_file`, `incrond_dir` and
+  `spool_dir` parameters (FreeBSD keeps incron config under `/usr/local/etc` and
+  uses the `wheel` group).
+
+### Changed
+- Switch acceptance testing from Beaker to Litmus.
+- Switch CI from Travis CI to GitHub Actions.
+- Require Puppet >= 8 (drop Puppet 4, 5 and 6).
+- Relax `puppetlabs/stdlib` and `puppetlabs/concat` requirements to `< 11.0.0`.
+- Update supported operating systems to Ubuntu 22.04/24.04, Debian 11/12,
+  Rocky 9, AlmaLinux 9 and FreeBSD 13/14/15.
+
+### Removed
+- Drop support for EOL operating systems (CentOS 5/6/7, Debian 8/9, Fedora 30,
+  RedHat 5/6/7, Ubuntu 14.04/16.04/18.04).
 
 ## [0.7.0] - 2019-09-18
 ### Added

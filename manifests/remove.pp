@@ -2,28 +2,25 @@
 #
 # @api private
 class incron::remove {
-
-  if $facts['service_provider'] == 'systemd' {
-    service { 'incron':
-      ensure   => stopped,
-      provider => systemd,
+  if $facts['service_provider'] in ['systemd', 'freebsd'] {
+    service { $incron::service_name:
+      ensure => stopped,
     }
   }
 
   package { 'incron':
-    ensure => purged,
+    ensure => absent,
   }
 
   file {
     [
-      '/etc/incron.d',
-      '/etc/incron.conf',
-      '/etc/incron.allow',
-      '/etc/incron.deny',
-      '/var/spool/incron',
+      $incron::incrond_dir,
+      $incron::conf_file,
+      $incron::allow_file,
+      $incron::deny_file,
+      $incron::spool_dir,
     ]:
       ensure => absent,
       force  => true,
   }
-
 }
