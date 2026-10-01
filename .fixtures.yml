@@ -3,6 +3,11 @@ fixtures:
   symlinks:
     incron: "#{source_dir}"
   repositories:
+    # Module requirements
     stdlib: https://github.com/puppetlabs/puppetlabs-stdlib
     concat: https://github.com/puppetlabs/puppetlabs-concat
+    # Acceptance testing requirements
+    facts: https://github.com/puppetlabs/puppetlabs-facts
+    provision: https://github.com/puppetlabs/provision
+    puppet_agent: https://github.com/puppetlabs/puppetlabs-puppet_agent
 ...

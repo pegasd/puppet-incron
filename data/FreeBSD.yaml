@@ -1,0 +1,11 @@
+---
+# The FreeBSD port's rc script is named `incron` (USE_RC_SUBR=${PORTNAME}); the
+# `incrond` daemon/rcvar is what it manages. Puppet's service provider matches
+# the rc script name, so the service is `incron` here.
+incron::service_name: incron
+incron::root_group: wheel
+incron::conf_file: /usr/local/etc/incron.conf
+incron::allow_file: /usr/local/etc/incron.allow
+incron::deny_file: /usr/local/etc/incron.deny
+incron::incrond_dir: /usr/local/etc/incron.d
+...

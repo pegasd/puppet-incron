@@ -19,17 +19,15 @@
 # @param user
 #   User that owns incron job.
 define incron::job (
-  String[1]                  $command,
-  Variant[Incron::Event,
-    Array[Incron::Event, 2]] $event,
-  Stdlib::Unixpath           $path,
-  String[1]                  $user = 'root',
+  String[1]                                       $command,
+  Variant[Incron::Event, Array[Incron::Event, 2]] $event,
+  Stdlib::Unixpath                                $path,
+  String[1]                                       $user = 'root',
 ) {
+  include incron
 
-  include ::incron
-
-  if !defined(Concat["/var/spool/incron/${user}"]) {
-    concat { "/var/spool/incron/${user}":
+  if !defined(Concat["${incron::spool_dir}/${user}"]) {
+    concat { "${incron::spool_dir}/${user}":
       ensure => present,
       mode   => '0600',
       owner  => $user,
@@ -37,8 +35,7 @@ define incron::job (
   }
 
   concat::fragment { "incron_${title}":
-    target  => "/var/spool/incron/${user}",
+    target  => "${incron::spool_dir}/${user}",
     content => "${path} ${join(any2array($event), ',')} ${command}\n",
   }
-
 }
