@@ -5,6 +5,8 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
+
+## [0.8.0] - 2026-10-01
 ### Added
 - FreeBSD support (14 and 15), including acceptance testing.
 - AlmaLinux 9 and Rocky 9 support (incron is pulled from EPEL, which must be
@@ -16,7 +18,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ### Changed
 - Switch acceptance testing from Beaker to Litmus.
 - Switch CI from Travis CI to GitHub Actions.
-- Require Puppet >= 8 (drop Puppet 4, 5 and 6).
+- Require Puppet >= 8 (drop Puppet 4, 5, 6 and 7).
 - Relax `puppetlabs/stdlib` and `puppetlabs/concat` requirements to `< 11.0.0`.
 - Update supported operating systems to Ubuntu 22.04/24.04, Debian 12,
   AlmaLinux 9, Rocky 9 and FreeBSD 14/15.
