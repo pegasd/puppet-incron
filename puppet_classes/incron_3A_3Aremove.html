@@ -6,15 +6,15 @@
 <title>
   Puppet Class: incron::remove
   
-    &mdash; Documentation by YARD 0.9.19
+    &mdash; Documentation by YARD 0.9.36
   
 </title>
 
-  <link rel="stylesheet" href="../css/style.css" type="text/css" charset="utf-8" />
+  <link rel="stylesheet" href="../css/style.css" type="text/css" />
 
-  <link rel="stylesheet" href="../css/common.css" type="text/css" charset="utf-8" />
+  <link rel="stylesheet" href="../css/common.css" type="text/css" />
 
-<script type="text/javascript" charset="utf-8">
+<script type="text/javascript">
   pathId = "puppet_classes::incron::remove";
   relpath = '../';
 </script>
@@ -81,8 +81,10 @@
 </div>
 
 
+
 <div class="tags">
   
+
 
 </div><div class="method_details_list">
   <table class="source_code">
@@ -116,36 +118,52 @@
 26
 27
 28
-29</pre>
+29
+30
+31
+32
+33
+34
+35
+36
+37</pre>
       </td>
       <td>
         <pre class="code"><span class="info file"># File 'manifests/remove.pp', line 4</span>
 
 class incron::remove {
-
-  if versioncmp($facts[&#39;os&#39;][&#39;release&#39;][&#39;full&#39;], &#39;15.04&#39;) &gt;= 0 {
-    service { &#39;incron&#39;:
-      ensure   =&gt; stopped,
-      provider =&gt; systemd,
+  # Stop the service before the package (and, on FreeBSD, its rc script) is
+  # removed. systemd copes with a missing unit on later runs; the FreeBSD rc
+  # provider does not, so use an idempotent exec guarded by `onestatus` there.
+  if $facts[&#39;service_provider&#39;] == &#39;systemd&#39; {
+    service { $incron::service_name:
+      ensure =&gt; stopped,
+      before =&gt; Package[&#39;incron&#39;],
+    }
+  } elsif $facts[&#39;service_provider&#39;] == &#39;freebsd&#39; {
+    exec { &#39;stop incrond&#39;:
+      command =&gt; &quot;service ${incron::service_name} stop&quot;,
+      onlyif  =&gt; &quot;service ${incron::service_name} onestatus&quot;,
+      path    =&gt; [&#39;/sbin&#39;, &#39;/bin&#39;, &#39;/usr/sbin&#39;, &#39;/usr/bin&#39;, &#39;/usr/local/sbin&#39;, &#39;/usr/local/bin&#39;],
+      before  =&gt; Package[&#39;incron&#39;],
     }
   }
 
   package { &#39;incron&#39;:
-    ensure =&gt; purged,
+    ensure =&gt; absent,
   }
 
   file {
     [
-      &#39;/etc/incron.d&#39;,
-      &#39;/etc/incron.conf&#39;,
-      &#39;/etc/incron.allow&#39;,
-      &#39;/etc/incron.deny&#39;,
-      &#39;/var/spool/incron&#39;,
+      $incron::incrond_dir,
+      $incron::conf_file,
+      $incron::allow_file,
+      $incron::deny_file,
+      $incron::spool_dir,
     ]:
       ensure =&gt; absent,
       force  =&gt; true,
   }
-
 }</pre>
       </td>
     </tr>

@@ -6,15 +6,15 @@
 <title>
   Puppet Class: incron::config
   
-    &mdash; Documentation by YARD 0.9.19
+    &mdash; Documentation by YARD 0.9.36
   
 </title>
 
-  <link rel="stylesheet" href="../css/style.css" type="text/css" charset="utf-8" />
+  <link rel="stylesheet" href="../css/style.css" type="text/css" />
 
-  <link rel="stylesheet" href="../css/common.css" type="text/css" charset="utf-8" />
+  <link rel="stylesheet" href="../css/common.css" type="text/css" />
 
-<script type="text/javascript" charset="utf-8">
+<script type="text/javascript">
   pathId = "puppet_classes::incron::config";
   relpath = '../';
 </script>
@@ -81,8 +81,10 @@
 </div>
 
 
+
 <div class="tags">
   
+
 
 </div><div class="method_details_list">
   <table class="source_code">
@@ -112,16 +114,13 @@
 22
 23
 24
-25
-26
-27</pre>
+25</pre>
       </td>
       <td>
         <pre class="code"><span class="info file"># File 'manifests/config.pp', line 4</span>
 
 class incron::config {
-
-  if !empty($::incron::allowed_users) and !empty($::incron::denied_users) {
+  if !empty($incron::allowed_users) and !empty($incron::denied_users) {
     fail(&#39;Either allowed or denied incron users must be specified, not both.&#39;)
   }
 
@@ -129,19 +128,18 @@ class incron::config {
     default:
       force =&gt; true,
       owner =&gt; &#39;root&#39;,
-      group =&gt; &#39;root&#39;,
+      group =&gt; $incron::root_group,
       mode  =&gt; &#39;0644&#39;;
-    &#39;/etc/incron.conf&#39;:
+    $incron::conf_file:
       ensure  =&gt; file,
       content =&gt; &#39;&#39;;
-    &#39;/etc/incron.allow&#39;:
-      ensure  =&gt; if empty($::incron::denied_users) { file } else { absent },
-      content =&gt; join(suffix([ &#39;root&#39; ] + $::incron::allowed_users, &quot;\n&quot;));
-    &#39;/etc/incron.deny&#39;:
-      ensure  =&gt; unless empty($::incron::denied_users) { file } else { absent },
-      content =&gt; join(suffix($::incron::denied_users, &quot;\n&quot;));
+    $incron::allow_file:
+      ensure  =&gt; if empty($incron::denied_users) { file } else { absent },
+      content =&gt; join(suffix([&#39;root&#39;] + $incron::allowed_users, &quot;\n&quot;));
+    $incron::deny_file:
+      ensure  =&gt; unless empty($incron::denied_users) { file } else { absent },
+      content =&gt; join(suffix($incron::denied_users, &quot;\n&quot;));
   }
-
 }</pre>
       </td>
     </tr>

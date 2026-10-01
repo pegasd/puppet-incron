@@ -6,15 +6,15 @@
 <title>
   File: README
   
-    &mdash; Documentation by YARD 0.9.19
+    &mdash; Documentation by YARD 0.9.36
   
 </title>
 
-  <link rel="stylesheet" href="css/style.css" type="text/css" charset="utf-8" />
+  <link rel="stylesheet" href="css/style.css" type="text/css" />
 
-  <link rel="stylesheet" href="css/common.css" type="text/css" charset="utf-8" />
+  <link rel="stylesheet" href="css/common.css" type="text/css" />
 
-<script type="text/javascript" charset="utf-8">
+<script type="text/javascript">
   pathId = "";
   relpath = '';
 </script>
@@ -60,42 +60,28 @@
       <div id="content"><div id='filecontents'>
 <h1 id="label-Configure+and+manage+incron+jobs+with+focus+on+tidiness">Configure and manage incron jobs with focus on tidiness</h1>
 
-<p><a href="https://travis-ci.org/pegasd/puppet-incron"><img
-src="https://travis-ci.org/pegasd/puppet-incron.svg?branch=master"></a> <a
-href="https://forge.puppetlabs.com/pegas/incron"><img
-src="https://img.shields.io/puppetforge/v/pegas/incron.svg"></a> <a
-href="https://forge.puppetlabs.com/pegas/incron"><img
-src="https://img.shields.io/puppetforge/dt/pegas/incron.svg"></a> <a
-href="https://forge.puppetlabs.com/pegas/incron"><img
-src="https://img.shields.io/puppetforge/f/pegas/incron.svg"></a></p>
+<p><a href="https://github.com/pegasd/puppet-incron/actions/workflows/ci.yml"><img src="https://github.com/pegasd/puppet-incron/actions/workflows/ci.yml/badge.svg"></a> <a href="https://forge.puppetlabs.com/pegas/incron"><img src="https://img.shields.io/puppetforge/v/pegas/incron.svg"></a> <a href="https://forge.puppetlabs.com/pegas/incron"><img src="https://img.shields.io/puppetforge/dt/pegas/incron.svg"></a> <a href="https://forge.puppetlabs.com/pegas/incron"><img src="https://img.shields.io/puppetforge/f/pegas/incron.svg"></a></p>
 
 <h2 id="label-Table+of+Contents">Table of Contents</h2>
 <ol><li>
-<p><a href="#label-Description">Description</a></p>
+<p><a href="#description">Description</a></p>
 </li><li>
-<p><a href="#label-Setup">Setup - The basics of getting started with incron</a></p>
+<p><a href="#setup">Setup - The basics of getting started with incron</a></p>
 </li><li>
-<p><a href="#label-Usage">Usage - Configuration options and additional
-functionality</a></p>
+<p><a href="#usage">Usage - Configuration options and additional functionality</a></p>
 </li><li>
-<p><a href="#label-Reference">Reference - An under-the-hood peek at what the module
-is doing and how</a></p>
+<p><a href="#reference">Reference - An under-the-hood peek at what the module is doing and how</a></p>
 </li><li>
-<p><a href="#label-Limitations">Limitations - OS compatibility, etc.</a></p>
+<p><a href="#limitations">Limitations - OS compatibility, etc.</a></p>
 </li><li>
-<p><a href="#label-Development">Development - Guide for contributing to the
-module</a></p>
+<p><a href="#development">Development - Guide for contributing to the module</a></p>
 </li></ol>
 
 <h2 id="label-Description">Description</h2>
 
-<p>This module is an interface for incron jobs with the main idea to be tidy.
-That means that any jobs that are not managed should not exist on the host.</p>
+<p>This module is an interface for incron jobs with the main idea to be tidy. That means that any jobs that are not managed should not exist on the host.</p>
 
-<p>Once you <code>include incron</code>, simply removing an
-<code>incron::job</code> from your manifests is sufficient for it to be
-cleaned up on your next agent run. No need to <code>ensure =&gt;
-absent</code> anymore. Enjoy!</p>
+<p>Once you <code>include incron</code>, simply removing an <code>incron::job</code> from your manifests is sufficient for it to be cleaned up on your next agent run. No need to <code>ensure =&gt; absent</code> anymore. Enjoy!</p>
 
 <h2 id="label-Setup">Setup</h2>
 
@@ -106,16 +92,13 @@ absent</code> anymore. Enjoy!</p>
 <pre class="code ruby"><code class="ruby"><span class='id identifier rubyid_include'>include</span> <span class='id identifier rubyid_incron'>incron</span>
 </code></pre>
 
-<p>This will install the required package, enable incron service and start
-managing <code>/etc/incron.d</code> directory.</p>
+<p>This will install the required package, enable incron service and start managing <code>/etc/incron.d</code> directory.</p>
 
-<p>Warning: all unmanaged files in <code>/etc/incron.d</code> will be removed
-at this point. Be careful!</p>
+<p>Warning: all unmanaged files in <code>/etc/incron.d</code> will be removed at this point. Be careful!</p>
 
 <h2 id="label-Usage">Usage</h2>
 
-<p>All interactions with incron jobs should be done using
-<code>incron::job</code> resource.</p>
+<p>All interactions with incron jobs should be done using <code>incron::job</code> resource.</p>
 
 <p>It works with at least 3 parameters:</p>
 
@@ -123,7 +106,8 @@ at this point. Be careful!</p>
   path    =&gt; &#39;/watched_directory&#39;,
   event   =&gt; &#39;IN_CLOSE_WRITE&#39;,
   command =&gt; &#39;/usr/local/bin/upload_file $#&#39;,
-}</code></pre>
+}
+</code></pre>
 
 <h2 id="label-Reference">Reference</h2>
 
@@ -134,27 +118,29 @@ at this point. Be careful!</p>
 
 <h3 id="label-Full+reference">Full reference</h3>
 
-<p>Check out <a href="REFERENCE.md">REFERENCE</a> for up-to-date details.</p>
+<p>Check out <a href="REFERENCE_md.html">REFERENCE</a> for up-to-date details.</p>
 
 <h2 id="label-Limitations">Limitations</h2>
 <ul><li>
-<p>Made for and tested only on the following Ubuntu distributions:</p>
+<p>Supported and tested on:</p>
 <ul><li>
-<p>14.04</p>
+<p>Ubuntu 22.04, 24.04</p>
 </li><li>
-<p>16.04</p>
+<p>Debian 12</p>
 </li><li>
-<p>18.04</p>
+<p>AlmaLinux 9, Rocky 9</p>
+</li><li>
+<p>FreeBSD 14, 15</p>
 </li></ul>
+</li><li>
+<p>On RHEL-family systems (e.g. AlmaLinux, Rocky), <code>incron</code> ships only in  <a href="https://docs.fedoraproject.org/en-US/epel/">EPEL</a>, not the base repositories.  This module does not manage repositories, so enable EPEL before including it,  e.g. <code>include epel</code> (from the <code>puppet/epel</code> module) or <code>dnf install   epel-release</code>. On RHEL-family the service is <code>incrond</code> (handled automatically  via the module’s Hiera data).</p>
+</li><li>
+<p>On FreeBSD, incron config lives under <code>/usr/local/etc</code> (<code>incron.conf</code>,  <code>incron.allow</code>, <code>incron.deny</code>, <code>incron.d</code>) and the service is <code>incron</code> (the rc  script name; the daemon itself is <code>incrond</code>); the per-user spool stays at  <code>/var/spool/incron</code>. These are handled automatically via the module’s Hiera data.</p>
 </li></ul>
 
 <h2 id="label-Development">Development</h2>
 
-<p>I&#39;ll be happy to know you&#39;re using this for one reason or the
-other. And if you want to contribute - even better. Feel free to <a
-href="https://github.com/pegasd/puppet-incron/issues">submit an issue</a> /
-<a href="https://github.com/pegasd/puppet-incron/pulls">fire up a PR</a> /
-whatever.</p>
+<p>I’ll be happy to know you’re using this for one reason or the other. And if you want to contribute - even better. Feel free to <a href="https://github.com/pegasd/puppet-incron/issues">submit an issue</a> / <a href="https://github.com/pegasd/puppet-incron/pulls">fire up a PR</a> / whatever.</p>
 </div></div>
 
       <div id="footer">

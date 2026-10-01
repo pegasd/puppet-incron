@@ -6,15 +6,15 @@
 <title>
   Puppet Class: incron
   
-    &mdash; Documentation by YARD 0.9.19
+    &mdash; Documentation by YARD 0.9.36
   
 </title>
 
-  <link rel="stylesheet" href="../css/style.css" type="text/css" charset="utf-8" />
+  <link rel="stylesheet" href="../css/style.css" type="text/css" />
 
-  <link rel="stylesheet" href="../css/common.css" type="text/css" charset="utf-8" />
+  <link rel="stylesheet" href="../css/common.css" type="text/css" />
 
-<script type="text/javascript" charset="utf-8">
+<script type="text/javascript">
   pathId = "puppet_classes::incron";
   relpath = '../';
 </script>
@@ -75,11 +75,11 @@
 <div class="docstring">
   <div class="discussion">
     
-<p>Main entry point for incron class which must be included in order to start
-managing all incron-related resources.</p>
+<p>Main entry point for incron class which must be included in order to start managing all incron-related resources.</p>
 
   </div>
 </div>
+
 
 
 <div class="tags">
@@ -151,13 +151,12 @@ managing all incron-related resources.</p>
         <span class='type'>(<tt>Array[String[1]]</tt>)</span>
       
       
-        <em class="default">(defaults to: <tt>[ ]</tt>)</em>
+        <em class="default">(defaults to: <tt>[]</tt>)</em>
       
       
         &mdash;
         <div class='inline'>
-<p>List of users allowed to use <code>incrontab(1)</code>. <code>root</code>
-will be added automatically.</p>
+<p>List of users allowed to use <code>incrontab(1)</code>. <code>root</code> will be added automatically.</p>
 </div>
       
     </li>
@@ -170,14 +169,138 @@ will be added automatically.</p>
         <span class='type'>(<tt>Array[String[1]]</tt>)</span>
       
       
-        <em class="default">(defaults to: <tt>[ ]</tt>)</em>
+        <em class="default">(defaults to: <tt>[]</tt>)</em>
       
       
         &mdash;
         <div class='inline'>
-<p>List of users specifically denied to use <code>incrontab(1)</code>. Note:
-When this is not empty, all users except ones specified here will be able
-to use <code>incrontab</code>.</p>
+<p>List of users specifically denied to use <code>incrontab(1)</code>. Note: When this is not empty, all users except ones specified here will be able to use <code>incrontab</code>.</p>
+</div>
+      
+    </li>
+  
+    <li>
+      
+        <span class='name'>root_group</span>
+      
+      
+        <span class='type'>(<tt>String[1]</tt>)</span>
+      
+      
+        <em class="default">(defaults to: <tt>&#39;root&#39;</tt>)</em>
+      
+      
+        &mdash;
+        <div class='inline'>
+<p>Name of the root group (<code>wheel</code> on FreeBSD).</p>
+</div>
+      
+    </li>
+  
+    <li>
+      
+        <span class='name'>conf_file</span>
+      
+      
+        <span class='type'>(<tt>Stdlib::Absolutepath</tt>)</span>
+      
+      
+        <em class="default">(defaults to: <tt>&#39;/etc/incron.conf&#39;</tt>)</em>
+      
+      
+        &mdash;
+        <div class='inline'>
+<p>Path to the <code>incron.conf</code> file.</p>
+</div>
+      
+    </li>
+  
+    <li>
+      
+        <span class='name'>allow_file</span>
+      
+      
+        <span class='type'>(<tt>Stdlib::Absolutepath</tt>)</span>
+      
+      
+        <em class="default">(defaults to: <tt>&#39;/etc/incron.allow&#39;</tt>)</em>
+      
+      
+        &mdash;
+        <div class='inline'>
+<p>Path to the <code>incron.allow</code> file.</p>
+</div>
+      
+    </li>
+  
+    <li>
+      
+        <span class='name'>deny_file</span>
+      
+      
+        <span class='type'>(<tt>Stdlib::Absolutepath</tt>)</span>
+      
+      
+        <em class="default">(defaults to: <tt>&#39;/etc/incron.deny&#39;</tt>)</em>
+      
+      
+        &mdash;
+        <div class='inline'>
+<p>Path to the <code>incron.deny</code> file.</p>
+</div>
+      
+    </li>
+  
+    <li>
+      
+        <span class='name'>incrond_dir</span>
+      
+      
+        <span class='type'>(<tt>Stdlib::Absolutepath</tt>)</span>
+      
+      
+        <em class="default">(defaults to: <tt>&#39;/etc/incron.d&#39;</tt>)</em>
+      
+      
+        &mdash;
+        <div class='inline'>
+<p>Path to the system incron tables directory (<code>incron.d</code>).</p>
+</div>
+      
+    </li>
+  
+    <li>
+      
+        <span class='name'>spool_dir</span>
+      
+      
+        <span class='type'>(<tt>Stdlib::Absolutepath</tt>)</span>
+      
+      
+        <em class="default">(defaults to: <tt>&#39;/var/spool/incron&#39;</tt>)</em>
+      
+      
+        &mdash;
+        <div class='inline'>
+<p>Path to the per-user incron tables spool directory.</p>
+</div>
+      
+    </li>
+  
+    <li>
+      
+        <span class='name'>service_name</span>
+      
+      
+        <span class='type'>(<tt>String[1]</tt>)</span>
+      
+      
+        <em class="default">(defaults to: <tt>&#39;incrond&#39;</tt>)</em>
+      
+      
+        &mdash;
+        <div class='inline'>
+<p>Incron service’s name.</p>
 </div>
       
     </li>
@@ -213,7 +336,7 @@ to use <code>incrontab</code>.</p>
       
         &mdash;
         <div class='inline'>
-<p>Incron service&#39;s &#39;ensure&#39; parameter.</p>
+<p>Incron service’s ‘ensure’ parameter.</p>
 </div>
       
     </li>
@@ -231,7 +354,7 @@ to use <code>incrontab</code>.</p>
       
         &mdash;
         <div class='inline'>
-<p>Incron service&#39;s &#39;enable&#39; parameter.</p>
+<p>Incron service’s ‘enable’ parameter.</p>
 </div>
       
     </li>
@@ -257,6 +380,7 @@ to use <code>incrontab</code>.</p>
 </ul>
 
 
+
 </div><div class="method_details_list">
   <table class="source_code">
     <tr>
@@ -264,46 +388,47 @@ to use <code>incrontab</code>.</p>
         <pre class="lines">
 
 
-21
-22
-23
-24
-25
-26
-27
-28
-29
-30
-31
-32
-33
-34
-35
-36
-37
-38
-39
-40
-41
-42
-43
-44
-45
-46
-47
-48
-49
-50
-51
-52
-53
-54
-55
-56
-57</pre>
+57
+58
+59
+60
+61
+62
+63
+64
+65
+66
+67
+68
+69
+70
+71
+72
+73
+74
+75
+76
+77
+78
+79
+80
+81
+82
+83
+84
+85
+86
+87
+88
+89
+90
+91
+92
+93
+94</pre>
       </td>
       <td>
-        <pre class="code"><span class="info file"># File 'manifests/init.pp', line 21</span>
+        <pre class="code"><span class="info file"># File 'manifests/init.pp', line 57</span>
 
 class incron (
   Enum[present, absent]  $ensure          = present,
@@ -312,10 +437,17 @@ class incron (
   String[1]              $package_version = installed,
 
   # incron::config
-  Array[String[1]]       $allowed_users   = [ ],
-  Array[String[1]]       $denied_users    = [ ],
+  Array[String[1]]       $allowed_users   = [],
+  Array[String[1]]       $denied_users    = [],
+  String[1]              $root_group      = &#39;root&#39;,
+  Stdlib::Absolutepath   $conf_file       = &#39;/etc/incron.conf&#39;,
+  Stdlib::Absolutepath   $allow_file      = &#39;/etc/incron.allow&#39;,
+  Stdlib::Absolutepath   $deny_file       = &#39;/etc/incron.deny&#39;,
+  Stdlib::Absolutepath   $incrond_dir     = &#39;/etc/incron.d&#39;,
+  Stdlib::Absolutepath   $spool_dir       = &#39;/var/spool/incron&#39;,
 
   # incron::service
+  String[1]              $service_name    = &#39;incrond&#39;,
   Boolean                $service_manage  = true,
   Enum[running, stopped] $service_ensure  = running,
   Boolean                $service_enable  = true,
@@ -323,24 +455,18 @@ class incron (
   # incron::purge
   Boolean                $purge_noop      = false,
 ) {
-
   if $ensure == present {
-
     contain incron::install
     contain incron::config
     contain incron::service
     contain incron::purge
 
-    Class[&#39;::incron::install&#39;] -&gt; Class[&#39;::incron::config&#39;] -&gt; Class[&#39;::incron::purge&#39;]
-    Class[&#39;::incron::install&#39;] ~&gt; Class[&#39;::incron::service&#39;]
-    Class[&#39;::incron::config&#39;] ~&gt; Class[&#39;::incron::service&#39;]
-
+    Class[&#39;incron::install&#39;] -&gt; Class[&#39;incron::config&#39;] -&gt; Class[&#39;incron::purge&#39;]
+    Class[&#39;incron::install&#39;] ~&gt; Class[&#39;incron::service&#39;]
+    Class[&#39;incron::config&#39;] ~&gt; Class[&#39;incron::service&#39;]
   } else {
-
     contain incron::remove
-
   }
-
 }</pre>
       </td>
     </tr>

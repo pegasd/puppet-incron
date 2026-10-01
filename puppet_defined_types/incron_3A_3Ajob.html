@@ -6,15 +6,15 @@
 <title>
   Defined Type: incron::job
   
-    &mdash; Documentation by YARD 0.9.19
+    &mdash; Documentation by YARD 0.9.36
   
 </title>
 
-  <link rel="stylesheet" href="../css/style.css" type="text/css" charset="utf-8" />
+  <link rel="stylesheet" href="../css/style.css" type="text/css" />
 
-  <link rel="stylesheet" href="../css/common.css" type="text/css" charset="utf-8" />
+  <link rel="stylesheet" href="../css/common.css" type="text/css" />
 
-<script type="text/javascript" charset="utf-8">
+<script type="text/javascript">
   pathId = "puppet_defined_types::incron::job";
   relpath = '../';
 </script>
@@ -79,6 +79,7 @@
 </div>
 
 
+
 <div class="tags">
   
   <div class="examples">
@@ -110,7 +111,7 @@
       
         &mdash;
         <div class='inline'>
-<p>Command to execute on triggered event</p>
+<p>Command to execute on triggered event.</p>
 </div>
       
     </li>
@@ -120,14 +121,13 @@
         <span class='name'>event</span>
       
       
-        <span class='type'>(<tt>Variant[Incron::Event,
-    Array[Incron::Event, 2]]</tt>)</span>
+        <span class='type'>(<tt>Variant[Incron::Event, Array[Incron::Event, 2]]</tt>)</span>
       
       
       
         &mdash;
         <div class='inline'>
-<p>inotify event (or an array of events)</p>
+<p>inotify event (or an array of events).</p>
 </div>
       
     </li>
@@ -143,7 +143,7 @@
       
         &mdash;
         <div class='inline'>
-<p>Path to watched directory</p>
+<p>Path to watched directory.</p>
 </div>
       
     </li>
@@ -161,12 +161,13 @@
       
         &mdash;
         <div class='inline'>
-<p>User that owns incron job</p>
+<p>User that owns incron job.</p>
 </div>
       
     </li>
   
 </ul>
+
 
 
 </div><div class="method_details_list">
@@ -176,13 +177,6 @@
         <pre class="lines">
 
 
-14
-15
-16
-17
-18
-19
-20
 21
 22
 23
@@ -200,35 +194,34 @@
 35
 36
 37
-38</pre>
+38
+39
+40
+41</pre>
       </td>
       <td>
-        <pre class="code"><span class="info file"># File 'manifests/job.pp', line 14</span>
+        <pre class="code"><span class="info file"># File 'manifests/job.pp', line 21</span>
 
 define incron::job (
-  String[1]                  $command,
-  Variant[Incron::Event,
-    Array[Incron::Event, 2]] $event,
-  Stdlib::Unixpath           $path,
-  String[1]                  $user = &#39;root&#39;,
+  String[1]                                       $command,
+  Variant[Incron::Event, Array[Incron::Event, 2]] $event,
+  Stdlib::Unixpath                                $path,
+  String[1]                                       $user = &#39;root&#39;,
 ) {
+  include incron
 
-  include ::incron
-
-  if !defined(Concat[&quot;/var/spool/incron/${user}&quot;]) {
-    concat { &quot;/var/spool/incron/${user}&quot;:
+  if !defined(Concat[&quot;${incron::spool_dir}/${user}&quot;]) {
+    concat { &quot;${incron::spool_dir}/${user}&quot;:
       ensure =&gt; present,
       mode   =&gt; &#39;0600&#39;,
       owner  =&gt; $user,
-      group  =&gt; &#39;incron&#39;,
     }
   }
 
   concat::fragment { &quot;incron_${title}&quot;:
-    target  =&gt; &quot;/var/spool/incron/${user}&quot;,
+    target  =&gt; &quot;${incron::spool_dir}/${user}&quot;,
     content =&gt; &quot;${path} ${join(any2array($event), &#39;,&#39;)} ${command}\n&quot;,
   }
-
 }</pre>
       </td>
     </tr>
